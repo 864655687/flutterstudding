@@ -15,12 +15,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with AutomaticKeepAliveClientMixin {   //保持当前页面状态  不会刷新
+    with AutomaticKeepAliveClientMixin {
+  //保持当前页面状态  不会刷新
   int page = 1;
+
   List<Map> hotGoodslist = [
     {},
     {},
-   
   ];
   // 没有Key时加上  GlobalKey<RefreshFooterState> _footerkey = GlobalKey<RefreshFooterState>();
   @override
@@ -59,7 +60,6 @@ class _HomePageState extends State<HomePage>
   ];
   String leaderimg = "images/2.jpg";
 
-
   void startgetdatas() {
     gethttp().then((v) {
       setState(() {
@@ -83,20 +83,19 @@ class _HomePageState extends State<HomePage>
     }
   }
 
+  bool flag =false ;
+  EasyRefreshController _controller = EasyRefreshController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: 
-            TextField(
-              decoration: InputDecoration(
-                hintText: "bvcbc"
-              ),
-           
-         ),
+        title: TextField(
+          decoration: InputDecoration(hintText: "bvcbc"),
+        ),
         backgroundColor: Colors.orangeAccent,
       ),
       body: EasyRefresh(
+        controller: _controller,
         header: ClassicalHeader(
           bgColor: Colors.pinkAccent,
           textColor: Colors.purple,
@@ -105,17 +104,16 @@ class _HomePageState extends State<HomePage>
           refreshingText: "正在刷新",
         ),
         footer: ClassicalFooter(
-                 enableInfiniteLoad :false,
-                 loadText: "上拉加载跟多数据",
+          enableInfiniteLoad: false,
+          loadText: "上拉加载跟多数据",
           infoText: "下拉加载更多",
           loadingText: "正在加载数据",
           loadReadyText: "释放加载数据",
-          noMoreText: "没有更多啦",
-           loadedText: "加载完成",
-           bgColor: Colors.greenAccent,
-           showInfo: false,
-    
-          ),
+          noMoreText: "没有更多数据",
+          loadedText: "加载完成",
+          bgColor: Colors.greenAccent,
+          showInfo: false,
+        ),
         child: ListView(
           children: <Widget>[
             SwiperWidget(pics: this.pics),
@@ -125,7 +123,6 @@ class _HomePageState extends State<HomePage>
             ),
             LeaderPhone(
               leaderImg: this.leaderimg,
-           
             ),
             ProdcutRecomemd(
               pics: this.pics,
@@ -137,18 +134,22 @@ class _HomePageState extends State<HomePage>
             _hotGoods()
           ],
         ),
-        onRefresh:() async{
- await Future.delayed(Duration(seconds: 2), () {
+        onRefresh: () async {
+          await Future.delayed(Duration(seconds: 2), () {
             print("开始刷新");
-          
           });
         },
         onLoad: () async {
           await Future.delayed(Duration(seconds: 2), () {
             print("开始加载更多");
-            setState(() {
-              hotGoodslist.add({});
-            });
+  
+              _controller.finishLoad(success: true,noMore: flag?false:true);
+              flag = !flag;
+          
+
+            // setState(() {
+            //   hotGoodslist.add({});
+            // });
           });
         },
       ),
@@ -262,7 +263,7 @@ class TopnavigatorBar extends StatelessWidget {
       height: ScreenUtil().setHeight(280),
       padding: EdgeInsets.all(10.0),
       child: GridView.count(
-        physics: NeverScrollableScrollPhysics(),  //静止view滚动
+        physics: NeverScrollableScrollPhysics(), //静止view滚动
         crossAxisCount: 5,
         //  mainAxisSpacing:20.0 ,
         children: items.map((val) {
