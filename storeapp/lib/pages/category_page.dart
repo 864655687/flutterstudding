@@ -8,6 +8,8 @@ import 'package:provide/provide.dart';
 import '../provide/catagorychild.dart';
 import '../provide/Category_goodsList.dart';
 
+
+
 class CategoryPage extends StatefulWidget {
   CategoryPage({Key key}) : super(key: key);
 

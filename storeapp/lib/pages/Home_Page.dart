@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../config/httpHeaders.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -139,11 +140,18 @@ class _HomePageState extends State<HomePage>
             print("开始刷新");
           });
         },
+      
         onLoad: () async {
+            
           await Future.delayed(Duration(seconds: 2), () {
             print("开始加载更多");
-  
-              _controller.finishLoad(success: true,noMore: flag?false:true);
+       
+     Fluttertoast.showToast(
+              msg:"没有更多啦",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER
+              );
+              _controller.finishLoad(success: true);
               flag = !flag;
           
 
